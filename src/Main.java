@@ -16,8 +16,6 @@ public class Main {
         double principalDouble = Double.parseDouble(principal);
         double periodDouble = Double.parseDouble(period) * 12;
 
-        ;
-
         double mortgageRate = principalDouble * ((monthlyInterestRate * Math.pow((1+monthlyInterestRate),periodDouble))/(Math.pow((1+monthlyInterestRate),periodDouble) - 1));
 
         NumberFormat result = NumberFormat.getCurrencyInstance();
