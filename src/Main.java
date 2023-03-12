@@ -2,43 +2,41 @@ import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Main {
+    public Main() {
+    }
 
     public static void main(String[] args) {
         Scanner principalScanner = new Scanner(System.in);
-        double principal = 0;
-        while (true) {
-            System.out.print("Principal (1000 - 1000000): ");
-            principal = principalScanner.nextDouble();
-            if (principal >= 1000 && principal <= 1000000)
-                break;
-            System.out.println("loan must be between $1000 and $1000000, enter valid value");
-        }
-
+        String principal = String.valueOf(principalScanner);
+        double principalDb = Double.valueOf(readNumber(principal, 1000.0, 1000000.0));
         Scanner annualInterestRateScanner = new Scanner(System.in);
-        double annualInterestRate = 0;
-        while (true) {
-            System.out.print("Annual Interest Rate: ");
-            annualInterestRate = annualInterestRateScanner.nextDouble();
-            if (annualInterestRate > 0 && annualInterestRate < 30)
-                break;
-            System.out.println("Annual interest rate must be between 0% and 30%. Enter a va;id value: ");
-        }
-
+        String annualInterestRate = String.valueOf(annualInterestRateScanner);
+        double annualInterestRateDb = Double.valueOf(readNumber(annualInterestRate, 0.0, 30.0));
         Scanner periodScanner = new Scanner(System.in);
-        int period = 0;
-        while (true) {
-            System.out.print("Period (years): ");
-            period = periodScanner.nextInt();
-            if (period >= 1 && period <= 30)
-                break;
-            System.out.println("Period must be between 1 and 30 years. Enter a valid period.");
-        }
-        double monthlyInterestRate = annualInterestRate / 1200;
-        int payments = period * 12;
-
-        double mortgageRate = principal * ((monthlyInterestRate * Math.pow((1 + monthlyInterestRate), payments)) / (Math.pow((1 + monthlyInterestRate), payments) - 1));
-
+        String period = String.valueOf(periodScanner);
+        double periodDb = Double.valueOf(readNumber(period, 1.0, 30.0));
+        double mortgageRate = calculateMortgage(principalDb, annualInterestRateDb, periodDb);
         NumberFormat result = NumberFormat.getCurrencyInstance();
         System.out.println(result.format(mortgageRate));
-   }
+    }
+
+    public static double calculateMortgage(double principal, double annualInterestRate, double period) {
+        double monthlyInterestRate = annualInterestRate / 1200.0;
+        double payments = period * 12.0;
+        return principal * (monthlyInterestRate * Math.pow(1.0 + monthlyInterestRate, payments) / (Math.pow(1.0 + monthlyInterestRate, payments) - 1.0));
+    }
+
+    public static double readNumber(String prompt, double min, double max) {
+        Scanner scanner = new Scanner(System.in);
+
+        while(true) {
+            System.out.print("Principal (" + min + " - " + max + "): ");
+            double value = scanner.nextDouble();
+            if (value >= min && value <= max) {
+                return value;
+            }
+
+            System.out.println("loan must be between " + min + " and " + max + " , enter valid value");
+        }
+    }
 }
