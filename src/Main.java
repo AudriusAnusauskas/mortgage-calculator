@@ -2,48 +2,45 @@ import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Main {
-    private static final byte MONTHS_YEAR = 12;
-    private static final byte PERCENT = 100;
+
 
     public Main() {
     }
 
     public static void main(String[] args) {
+        double principal = readNumber("Principal: ", 1000.0, 1000000.0);
+        double annualInterestRate = readNumber("Annual Interest Rate: ", 0.0, 30.0);
+        double period = readNumber("Period (years): ", 1.0, 30.0);
 
-        Scanner principalScanner = new Scanner(System.in);
-        String principal = String.valueOf(principalScanner);
-        double principalDb = Double.valueOf(readNumber(principal, 1000.0, 1000000.0));
-
-        Scanner annualInterestRateScanner = new Scanner(System.in);
-        String annualInterestRate = String.valueOf(annualInterestRateScanner);
-        double annualInterestRateDb = Double.valueOf(readNumber(annualInterestRate, 0.0, 30.0));
-
-        Scanner periodScanner = new Scanner(System.in);
-        String period = String.valueOf(periodScanner);
-        double periodDb = Double.valueOf(readNumber(period, 1.0, 30.0));
-
-        double mortgageRate = calculateMortgage(principalDb, annualInterestRateDb, periodDb);
+        double mortgageRate = calculateMortgage(principal, annualInterestRate, period);
         NumberFormat result = NumberFormat.getCurrencyInstance();
         System.out.println(result.format(mortgageRate));
     }
 
     public static double calculateMortgage(double principal, double annualInterestRate, double period) {
+        final byte MONTHS_YEAR = 12;
+        final byte PERCENT = 100;
         double monthlyInterestRate = annualInterestRate / MONTHS_YEAR / PERCENT;
         double payments = period * MONTHS_YEAR;
-        return principal * (monthlyInterestRate * Math.pow(1.0 + monthlyInterestRate, payments) / (Math.pow(1.0 + monthlyInterestRate, payments) - 1.0));
+        double mortgage = principal
+                * (monthlyInterestRate * Math.pow(1.0 + monthlyInterestRate, payments)
+                / (Math.pow(1.0 + monthlyInterestRate, payments) - 1.0));
+
+        return mortgage;
     }
 
     public static double readNumber(String prompt, double min, double max) {
         Scanner scanner = new Scanner(System.in);
-
+        double value;
         while (true) {
-            System.out.print("Principal (" + min + " - " + max + "): ");
-            double value = scanner.nextDouble();
+            System.out.print(prompt);
+            value = scanner.nextDouble();
             if (value >= min && value <= max) {
-                return value;
+                break;
             }
 
-            System.out.println("loan must be between " + min + " and " + max + " , enter valid value");
+            System.out.println("Enter a value between " + min + " and " + max );
         }
+        return value;
     }
 }
